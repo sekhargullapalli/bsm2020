@@ -59,6 +59,8 @@ namespace grpassign_bsm2020
         public override string ToString()
         {
             return $"{Name}:t, {A1:#0.00} ({VA1:#0.00}), {A2:#0.00} ({VA2:#0.00}), {A3:#0.00} ({VA3:#0.00}), {A4:#0.00} ({VA4:#0.00}), {A5}  ({VA5:#0.00}), {A6} ({VA6:#0.00})";
+            //return $"{Name},{VA1:#0.00},{VA2:#0.00},{VA3:#0.00},{VA4:#0.00},{VA5:#0.00},{VA6:#0.00}";
+
         }
         public string PrintValues()
         {
@@ -156,6 +158,24 @@ namespace grpassign_bsm2020
                     break;
                 default:
                     throw new Exception("Unknown attribute level for A6");
+            }
+
+            if (Utilities.UseAlterateValueFunctionforSwitchingRisk)
+            {
+                switch (A6)
+                {
+                    case 1.0:
+                        VA6 = 1;
+                        break;
+                    case 2.0:
+                        VA6 = 0.75;
+                        break;
+                    case 3.0:
+                        VA6 = 0.5;
+                        break;
+                    default:
+                        throw new Exception("Unknown attribute level for A6");
+                }
             }
         }
 

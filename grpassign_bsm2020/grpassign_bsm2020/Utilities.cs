@@ -8,6 +8,8 @@ namespace grpassign_bsm2020
 {
     public static class Utilities
     {
+        public static bool UseAlterateValueFunctionforSwitchingRisk = false;
+
         public static void CreateExhaustiveCombinations(int startindex = 0, int step = 2,
             bool preventduplicates = true,
             bool zeroallowed = false,
@@ -33,7 +35,7 @@ namespace grpassign_bsm2020
                         {
                             if (i + j + k + l >= 100) break;
                             if (preventduplicates)
-                                if (i == l || j == l || k == 1) continue;
+                                if (i == l || j == l || k == l) continue;
                             for (int m = startindex; m < 100; m += step)
                             {
                                 if (i + j + k + l + m >= 100) break;
