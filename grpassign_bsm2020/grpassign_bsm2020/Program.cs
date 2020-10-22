@@ -13,6 +13,8 @@ namespace grpassign_bsm2020
     {
         enum SolverMethod 
         {
+            None,
+
             Combination_Dominance_AttributeValues,
             Combination_Dominance_ValueFunctions,
             Combination_ExhaustiveSwing_AllWeights,
@@ -24,22 +26,32 @@ namespace grpassign_bsm2020
             Single_ExhaustiveSwing_DistinctWeights
         }
 
-        static SolverMethod Solver = SolverMethod.Combination_ExhaustiveSwing_DistinctWeights;
+        static SolverMethod Solver = SolverMethod.Combination_Dominance_ValueFunctions;
 
         static void Main(string[] args)
         {
 
-            foreach(Partner p in DataModels.GetPartners())
-                Console.WriteLine(p);
+            ////List single values
+            //foreach (Partner p in DataModels.GetPartners())
+            //    Console.WriteLine(p);
+            //return;
 
-            return;
-            
+            //List combination values
+            //foreach (Partner p in DataModels.GetCombinations())
+            //    Console.WriteLine(p);
+            //return;
+
             //Combination_Dominance_AttributeValues
             if (Solver == SolverMethod.Combination_Dominance_AttributeValues)
             {
                 DominanceMethod.Combination_DominanceMethod();
             }
 
+            //Combination_Dominance_ValueFunctions
+            if (Solver == SolverMethod.Combination_Dominance_ValueFunctions)
+            {
+                DominanceMethod.Combination_DominanceValueMethod();
+            }
 
             //Combination_ExhaustiveSwing_AllWeights
             if (Solver == SolverMethod.Combination_ExhaustiveSwing_AllWeights)
@@ -83,6 +95,64 @@ namespace grpassign_bsm2020
                     ExhaustiveSwingMethod.Combination_ExhaustiveSwing_AllWeights(Combinations, kvp.Value);
                 }            
             }
+
+
+            //Single_Dominance_AttributeValues
+            if (Solver == SolverMethod.Single_Dominance_AttributeValues)
+            {
+                DominanceMethod.Single_DominanceMethod();
+            }
+
+            //Single_Dominance_ValueFunctions
+            if (Solver == SolverMethod.Single_Dominance_ValueFunctions)
+            {
+                DominanceMethod.Single_DominanceValueMethod();
+            }
+
+            //Single_ExhaustiveSwing_AllWeights
+            if (Solver == SolverMethod.Single_ExhaustiveSwing_AllWeights)
+            {
+                List<WeightCombination> Weights = new List<WeightCombination>();
+                string filepath = @"../../../serialized/allweights.csv";
+                using (var reader = new StreamReader(filepath))
+                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                {
+                    Weights = csv.GetRecords<WeightCombination>().ToList();
+                }
+                List<Partner> Partners = DataModels.GetPartners();
+                ExhaustiveSwingMethod.Combination_ExhaustiveSwing_AllWeights(Partners, Weights);
+            }
+
+            if (Solver == SolverMethod.Single_ExhaustiveSwing_DistinctWeights)
+            {
+                List<WeightCombination> Weights = new List<WeightCombination>();
+                string filepath = @"../../../serialized/distinctweights.csv";
+                using (var reader = new StreamReader(filepath))
+                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                {
+                    Weights = csv.GetRecords<WeightCombination>().ToList();
+                }
+
+                //Sorting weights
+                Dictionary<string, List<WeightCombination>> SortedWeights = new Dictionary<string, List<WeightCombination>>();
+                for (int i = 1; i <= 6; i++)
+                    SortedWeights.Add($"W{i}", new List<WeightCombination>());
+                foreach (WeightCombination weight in Weights)
+                    SortedWeights[weight.DominanceWeight].Add(weight);
+
+                List<Partner> Partners = DataModels.GetPartners();
+
+                //Conducting Exhaustive Swing For All Sets
+                foreach (KeyValuePair<string, List<WeightCombination>> kvp in SortedWeights)
+                {
+                    Console.WriteLine($"\nDominant Weight {kvp.Key}");
+                    Console.WriteLine("========================");
+                    ExhaustiveSwingMethod.Combination_ExhaustiveSwing_AllWeights(Partners, kvp.Value);
+                }
+            }
+
+
+
 
 
 
