@@ -26,15 +26,15 @@ namespace grpassign_bsm2020
             Single_ExhaustiveSwing_DistinctWeights
         }
 
-        static SolverMethod Solver = SolverMethod.Combination_Dominance_ValueFunctions;
+        static SolverMethod Solver = SolverMethod.None;
 
         static void Main(string[] args)
         {
 
-            ////List single values
-            //foreach (Partner p in DataModels.GetPartners())
-            //    Console.WriteLine(p);
-            //return;
+            //List single values
+            foreach (Partner p in DataModels.GetPartners())
+                Console.WriteLine(p);
+            return;
 
             //List combination values
             //foreach (Partner p in DataModels.GetCombinations())
